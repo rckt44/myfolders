@@ -1,0 +1,113 @@
+/* hi */
+/*   */
+/* I'm joining two tables, where I'd like the content from var in column b to be  */
+/* translated into a text of my choice. Instead of my creating another step,  */
+/* can this be done in a single query? */
+/*   */
+/* Example code below. */
+/*   */
+/* In the final output, I'd like my variable "relationship" to read "Primary" if "0",  */
+/* or "Secondary" if "2". */
+
+
+
+
+Data table1;
+Input ID $ Name $;
+Datalines;
+001 John
+004 Marc
+007 Jess
+012 Peter
+Run;
+
+Data table2;
+Input ID $ Relationship $ ;
+Datalines;
+001 0
+004 2
+007 0
+012 2
+Run;
+******my solution*******************;
+/* the sql step can be this,as below; */
+
+proc sql;
+create table final_table as 
+select a.*,b.Relationship,
+(
+case
+when b.Relationship eq '0' then 'Primary' 
+when b.Relationship ne '0' then 'secondary' end
+)as flag  from table1 a 
+inner join table2 b 
+on 
+a.id=b.id;
+quit;
+
+
+/* or you can build the format as below and apply in both in data step merge or sql case when */
+
+proc format;
+	value $ rel 
+	'0'='primary'
+	'2'='secondary'
+	;
+	run;
+	
+	
+	*******expert solution********;
+proc sql;
+create table sofar as
+  select
+    a.*,
+    case
+      when b.relationship = '0' then 'Primary'
+      when b.relationship = '2' then 'Secondary'
+      else 'Undefined'
+    end as relationship
+  from table1 a,table2 b
+  where a.id=b.id
+;
+quit;
+
+**********alternative expert solution***********;
+proc format library=work;
+value $rel
+  '0' = 'Primary'
+  '2' = 'Secondary'
+  other = 'Undefined'
+;
+run;
+
+proc sql;
+create table sofar2 as
+  select
+    a.*,
+    b.relationship format = $rel.
+  from table1 a,table2 b
+  where a.id=b.id
+;
+quit;
+
+
+	
+	
+	
+	********my solution********************;
+proc  sort data=table1;
+by id;
+run; 
+proc sort data=table2;
+by id;
+run;
+data new;
+merge table1 table2;
+by id;
+informat flag $12.;
+if relationship=0 then flag='primary';
+else flag='secondary';
+run;
+
+
+

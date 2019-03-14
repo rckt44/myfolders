@@ -1,0 +1,9 @@
+number,code,analysistype,refpop,censorrule,eventcodes,arvregimen
+1.1,ph38_6,prelim,38,6,132,na
+1.2,ph38_6,prelim,38,6,132,nn
+1.3,ph38_6,prelim,38,6,132,pi
+1.4,ph38_6,prelim,38,6,132,nannpi
+1.5,ph38_6,prelim,38,6,132,xxxxx
+2.1,ph38_6,prelim,38,6,249,na
+2.2,ph38_6,prelim,38,6,249,nn
+2.3,ph38_6,prelim,38,6,249,pi

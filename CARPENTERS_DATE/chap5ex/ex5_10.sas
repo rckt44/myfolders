@@ -1,0 +1,73 @@
+
+DATA YRDIF;
+LENGTH basis $ 7;
+start = '07AUG1967'd;
+end = '24MAY2014'd;
+basis = '30/360';
+function = CATS("YRDIF('07AUG1967'd,'24MAY2014'd,",basis,"')");
+result = YRDIF(start,end,basis);
+OUTPUT;
+basis = 'ACT/ACT';
+function = CATS("YRDIF('07AUG1967'd,'24MAY2014'd,",basis,"')");
+result = YRDIF(start,end,basis);
+OUTPUT;
+basis = 'ACT/360';
+function = CATS("YRDIF('07AUG1967'd,'24MAY2014'd,",basis,"')");
+result = YRDIF(start,end,basis);
+OUTPUT;
+basis = 'ACT/365';
+function = CATS("YRDIF('07AUG1967'd,'24MAY2014'd,",basis,"')");
+result = YRDIF(start,end,basis);
+OUTPUT;
+basis = 'AGE';
+function = CATS("YRDIF('07AUG1967'd,'24MAY2014'd,",basis,"')");
+result = YRDIF(start,end,basis);
+OUTPUT;
+run;
+
+DATA ageact;
+end = '24MAY2014'd;
+DO start="08AUG1967"d TO "08AUG2013"d;
+   a = YRDIF(start,end,'ACTUAL');
+   b = YRDIF(start,end,'AGE');
+   IF a NE b THEN
+      OUTPUT;
+END;
+FORMAT start date9.;
+RUN;
+
+DATA yrdif2;
+LENGTH basis $ 7;
+base = '07AUG1967'd;
+end = '24MAY2014'd;
+DO i=1, 2, 4, 5;
+   start=intnx('YEAR',base,i,'S');
+   basis = 'ACT/ACT';
+   function = CATS("YRDIF('",PUT(start,date9.),"'d,'24MAY2014'd,",basis,"')");
+   result = YRDIF(start,end,basis);
+   OUTPUT;
+   basis = 'AGE';
+   function = CATS("YRDIF('",PUT(start,date9.),"'d,'24MAY2014'd,",basis,"')");
+   result = YRDIF(start,end,basis);
+   OUTPUT;
+   function= ' ';
+   result = .;
+   OUTPUT;
+END;
+RUN;
+
+PROC REPORT NOWD DATA=YRDIF;
+COLUMNS function result comment;
+DEFINE function / " ";
+DEFINE result / "Resulting value";
+DEFINE comment / "Comment";
+COMPUTE comment / LENGTH=10;
+  comment = ' ';
+ENDCOMP;
+RUN;
+
+PROC REPORT NOWD DATA=yrdif2;
+COLUMNS function result;
+DEFINE function / " ";
+DEFINE result / "Resulting value";
+RUN;

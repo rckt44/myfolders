@@ -1,0 +1,12 @@
+datatable,varname,action,format,chk_type
+exp_billing,bill_chg_fac,make_n,,
+exp_billing,payor01_as_text,applyfmt,$payor_fmt.,
+exp_billing,payor02_as_text,applyfmt,$payor_fmt.,
+exp_billing,payor03_as_text,applyfmt,$payor_fmt.,
+exp_billing,payor04_as_text,applyfmt,$payor_fmt.,
+exp_demopat,age_value,make_n,,
+exp_demopat,dob_text,make_n,mmddyy10.,
+exp_demopat,pat_adr_fco_as_text,applyfmt,$AKFips.,
+exp_demopat,pat_adr_reg_as_text,applyfmt,$pat_adr_reg_fmt., 
+exp_demopat,pat_adr_zip,make_n,,zip
+exp_demopat,pat_ethnic_as_text,applyfmt,$pat_ethnic_FMT.,
